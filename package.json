@@ -1,14 +1,14 @@
 {
-  "name": "vmTranslator",
+  "name": "vmtranslator",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index",
-  "types": "lib/index",
+  "main": "lib/vmTranslator",
+  "types": "lib/vmTranslator",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build:live",
     "build": "tsc -p .",
-    "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/vmTranslator.ts"
   },
   "keywords": [],
   "author": "",

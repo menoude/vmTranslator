@@ -1,10 +1,11 @@
 import { readFileSync } from 'fs'
-import { commands } from './commands'
+import { commands } from './constants'
 
 export default class Parser {
     
-    lines: string[]
-    currentLine: string[]
+    private lines: string[]
+    private currentLine: string[]
+    private currentCommandCode: string
 
     constructor(path: string) {
         let commentLine: RegExp = /\/\//
@@ -17,6 +18,7 @@ export default class Parser {
             return acc
         }, [])
         this.currentLine = []
+        this.currentCommandCode = ''
     }
 
     hasMoreCommands(): boolean {
@@ -26,18 +28,21 @@ export default class Parser {
     advance(): void {
         let next: string | undefined = this.lines.pop()
         this.currentLine = next ? next.split(' ') : []
+        this.currentCommandCode = commands[this.currentLine[0]]
     }
 
     commandType(): string {
-        // + a case when it's null?
-        return commands[this.currentLine[0]]
+        return this.currentCommandCode
     }
 
     arg1(): string {
+        if (this.currentCommandCode === 'C_ARITHMETIC')
+            return this.currentLine[0]
         return this.currentLine[1]
     }
 
     arg2(): number {
         return parseInt(this.currentLine[2])
     }
+
 }

@@ -1,7 +1,7 @@
 import Parser from "./parser";
 import CodeWriter from './codeWriter'
 
-const path = process.argv[1]
+const path = process.argv[2]
 const regex = /.*\.vm/
 
 if (process.argv.length !== 3 || !regex.test(path)) {
@@ -9,7 +9,7 @@ if (process.argv.length !== 3 || !regex.test(path)) {
     process.exit(1)
 }
 
-const name: string = path.slice(-3)
+const name: string = path.slice(0, -3)
 const parser: Parser = new Parser(path)
 const codeWriter: CodeWriter = new CodeWriter(name)
 
@@ -22,4 +22,4 @@ while(parser.hasMoreCommands()) {
         codeWriter.writePushPop(commandType, parser.arg1(), parser.arg2())
 }
 
-codeWriter.close()
+codeWriter.close(`${name}.asm created.`)

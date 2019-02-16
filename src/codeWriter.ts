@@ -1,9 +1,10 @@
-import { WriteStream, createWriteStream } from 'fs';
-import { memorySegments } from './commands'
+import { WriteStream, createWriteStream, write } from 'fs';
+import { commands, memorySegments } from './constants'
+import { Stream } from 'stream';
 
 export default class CodeWriter {
     
-    stream: WriteStream
+    private stream: WriteStream
 
     constructor(name: string) {
         this.stream = createWriteStream(`./${name}.asm`)
@@ -11,19 +12,21 @@ export default class CodeWriter {
 
     writeArithmetic(command: string): void {
         this.stream.write(`// ${command}\n`)
-
+        
     }
 
     writePushPop(command: string, segment: string, index: number): void {
-        this.stream.write(`// ${command} ${segment} ${index}\n`)
-        if (command === 'C_PUSH') {
+        this.stream.write(`// ${command === 'C_PUSH' ? 'push' : 'pop'} ${segment} ${index}\n`)
+        // if (command === 'C_PUSH') {
 
-        } else {
+        // } else {
 
-        }
+        // }
     }
 
-    close(): void {
+    close(message: string): void {
         this.stream.end()
+        console.log(message);
     }
+
 }

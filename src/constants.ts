@@ -28,3 +28,9 @@ export const memorySegments: stringDict = {
     this: 'THIS',
     that: 'THAT',
 }
+
+export const pseudoCode: stringDict = {
+    decrementSp: '@SP\nM=M-1',
+    incrementSp: '@SP\nM=M+1',
+
+}
