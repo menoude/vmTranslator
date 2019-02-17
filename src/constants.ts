@@ -27,10 +27,24 @@ export const memorySegments: stringDict = {
     argument: 'ARG',
     this: 'THIS',
     that: 'THAT',
+    temp: '5',
+    static: '16',
+    pointer:'3' 
 }
 
-export const pseudoCode: stringDict = {
-    decrementSp: '@SP\nM=M-1',
-    incrementSp: '@SP\nM=M+1',
+export const asmAddSubANdOr: stringDict = {
+    add: 'M=D+M\n',
+    sub: 'M=M-D\n',
+    and: 'M=D&M\n',
+    or: 'M=D|M\n'
+}
+export const asmNegNot: stringDict = {
+    neg: 'M=-M\n',
+    not: 'M=!M\n'
+}
 
+export const asmEqGtLt: stringDict = {
+    eq: 'D;JNE\n',
+    gt: 'D;JLE\n',
+    lt: 'D;JGE\n'
 }

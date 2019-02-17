@@ -26,7 +26,7 @@ export default class Parser {
     }
 
     advance(): void {
-        let next: string | undefined = this.lines.pop()
+        let next: string | undefined = this.lines.shift()
         this.currentLine = next ? next.split(' ') : []
         this.currentCommandCode = commands[this.currentLine[0]]
     }
