@@ -30,7 +30,7 @@ export const variableSegments: stringDict = {
     local: 'LCL',
     argument: 'ARG',
     this: 'THIS',
-    that: 'THAT',
+    that: 'THAT'
 }
 
 export const fixedSegments: numDict = {

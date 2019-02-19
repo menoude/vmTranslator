@@ -1,17 +1,19 @@
 import { WriteStream, createWriteStream, write } from 'fs';
 import { commands, variableSegments, fixedSegments, asmAddSubANdOr, asmNegNot, asmEqGtLt } from './constants'
 import { Stream } from 'stream';
+import path from 'path'
 
 export default class CodeWriter {
     
+    private name: string
     private stream: WriteStream
     private labelsCount: number
-    private staticsCount: number
 
-    constructor(private name: string) {
-        this.stream = createWriteStream(`./${name}.asm`)
+    constructor(filePath: string) {
+        const dirPath = path.dirname(filePath)
+        this.name = path.basename(filePath).slice(0, -3)
+        this.stream = createWriteStream(`${dirPath}/${this.name}.asm`)
         this.labelsCount = 0
-        this.staticsCount = 0
     }
 
     writeArithmetic(command: string): void {
@@ -49,13 +51,18 @@ export default class CodeWriter {
             address: number
         
         if (label = variableSegments[segment]) {
-            label = label === 'static' ? this.name + index: label
-            asmCommand = `@${index}\nD=A\n`
-                        + `@${label}\nAD=D+M\n`
-                        + 'D=M\n@SP\nM=M+1\nA=M-1\nM=D\n'
+            asmCommand = `@${index}\n`
+                        + 'D=A\n'
+                        + `@${label}\n`
+                        + 'A=D+M\nD=M\n@SP\nM=M+1\nA=M-1\nM=D\n'
         } else if (address = fixedSegments[segment]) {
             address += index
-            asmCommand = `@${index}\nD=A\n`
+            asmCommand = `@${address}\n`
+                        + 'D=M\n@SP\nM=M+1\nA=M-1\nM=D\n'
+        } else if (segment === 'static') {
+            label = `${this.name}.${index}`
+            asmCommand = `@${label}\n`
+                        + 'D=M\n@SP\nM=M+1\nA=M-1\nM=D\n'
         } else {
             // constant
             asmCommand = `@${index}\nD=A\n`
@@ -66,25 +73,31 @@ export default class CodeWriter {
 
     private writePop(segment: string, index: number):void {
         let asmCommand: string,
-            specific: string
+            label: string,
+            address: number
         
-        address = memorySegments[segment]
-        this.writePop(segment, index)
-        if (address) {
-            asmCommand = `@${index}\nD=A\n`
-            + `@${address}\nD=D+M\n`
-            + '@SP\nAM=M-1\nD=D+M\nA=D-M\nM=D-A\n'
+        if (label = variableSegments[segment]) {
+            asmCommand = `@${index}\n`
+                        + 'D=A\n'
+                        + `@${label}\n`
+                        + 'D=D+M\n@SP\nAM=M-1\nD=D+M\nA=D-M\nM=D-A\n'
+        } else if (address = fixedSegments[segment]) {
+            address += index
+            asmCommand = `@${address}\n`
+                        + 'D=A\n@SP\nAM=M-1\nD=D+M\nA=D-M\nM=D-A\n'
         } else {
             // static
-            address = this.name + this.staticsCount++
-            asmCommand = `@SP\nAM=M-1\nD=M\n@${address}\nM=D\n`
+            label = `${this.name}.${index}`
+            asmCommand = '@SP\nAM=M-1\nD=M\n'
+                        + `@${label}\n`
+                        + 'M=D\n'
         }
         this.stream.write(`// push ${segment} ${index}\n` + asmCommand)
     }
 
-    close(message: string): void {
+    close(): void {
         this.stream.end()
-        console.log(message);
+        console.log(`${this.name}.asm created.`);
     }
 
 }
