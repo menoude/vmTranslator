@@ -20,8 +20,8 @@ if (!D) {			@FALSE, D;(JNE JLE JGE)
 				    (END)
 
 push segment i
-D= SEG+i			@i, D=A, @(LCL, ARG, THIS, THAT, 5, 16, 3), D=D+M
-D = *D				A=D, D=M
+D= SEG+i			@i, D=A, @(LCL, ARG, THIS, THAT, 5, 3, FILE.#), A=D+M
+D = *D				D=M
 SP++				@SP, M=M+1
 *(SP - 1) = D		A=M-1, M=D
 
@@ -31,6 +31,20 @@ SP++				@SP, M=M+1
 *(SP-1) = D			A=M-1 M=D  
 
 pop segment i
-SP--				@SP, M=M-1
-D=*SP				A=M, D=M,
-*(SEG + i) = D		@(LCL, ARG, THIS, THAT), A=M
+
+@i
+D=A
+@(....)
+D=D+M // ADRESSE FINALE EST STOCKEE
+@SP
+AM=M-1
+D=D+M // D A L'ADRESSE FINALE + LA VALEUR A COPIER
+A=D-M // A A L'ADRESSE FINALE
+M=D-A // DANS L'ADRESSE FINALE ON MET D - L'ADRESSE
+
+pop static i
+@SP
+AM=M-1
+D=M
+@(name.#)
+M=D

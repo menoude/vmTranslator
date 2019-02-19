@@ -2,6 +2,10 @@ interface stringDict {
     [key: string]: string
 }
 
+interface numDict {
+    [key: string]: number
+}
+
 export const commands: stringDict = {
     add: 'C_ARITHMETIC',
     sub: 'C_ARITHMETIC',
@@ -22,14 +26,16 @@ export const commands: stringDict = {
     // C_CALL: 9
 }
 
-export const memorySegments: stringDict = {
+export const variableSegments: stringDict = {
     local: 'LCL',
     argument: 'ARG',
     this: 'THIS',
     that: 'THAT',
-    temp: '5',
-    static: '16',
-    pointer:'3' 
+}
+
+export const fixedSegments: numDict = {
+    temp: 5,
+    pointer:3 
 }
 
 export const asmAddSubANdOr: stringDict = {
