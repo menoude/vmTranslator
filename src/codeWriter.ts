@@ -9,11 +9,15 @@ export default class CodeWriter {
     private stream: WriteStream
     private labelsCount: number
 
-    constructor(filePath: string) {
-        const dirPath = path.dirname(filePath)
-        this.name = path.basename(filePath).slice(0, -3)
-        this.stream = createWriteStream(`${dirPath}/${this.name}.asm`)
+    constructor(outputFilePath: string) {
+        this.stream = createWriteStream(outputFilePath)
         this.labelsCount = 0
+        this.name = ''
+    }
+
+    setFileName(name: string) {
+        this.name = name
+        this.stream.write(`// ${name}\n`)
     }
 
     writeArithmetic(command: string): void {
@@ -97,7 +101,6 @@ export default class CodeWriter {
 
     close(): void {
         this.stream.end()
-        console.log(`${this.name}.asm created.`);
     }
 
 }
