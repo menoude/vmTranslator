@@ -96,7 +96,7 @@ export default class CodeWriter {
 			label = `${this.name}.${index}`;
 			asmCommand = "@SP\nAM=M-1\nD=M\n" + `@${label}\n` + "M=D\n";
 		}
-		this.stream.write(`// push ${segment} ${index}\n` + asmCommand);
+		this.stream.write(`// pop ${segment} ${index}\n` + asmCommand);
 	}
 
 	close(): void {
